@@ -84,10 +84,10 @@ void PDPPDatabase::get() {
         q.next();
         QList<Field *> fields;
         QSqlRecord rec = q.record();
-        if (qApp->property("verbose").toBool()) {
-            qDebug() << "generating entry from table" << tbl;
-            qDebug() << rec;
-        }
+#ifndef NDEBUG
+        qDebug() << "generating entry from table" << tbl;
+        qDebug() << rec;
+#endif
 
         for (const int i : range(0, rec.count())) {
             const QString vName = rec.fieldName(i);
@@ -113,9 +113,9 @@ void PDPPDatabase::get() {
 
 bool PDPPDatabase::saveSt() {
     for (const QString &tbl : db.tables()) {
-        if (qApp->property("verbose").toBool()) {
-            qDebug() << "deleting table" << tbl;
-        }
+#ifndef NDEBUG
+        qDebug() << "deleting table" << tbl;
+#endif
         db.exec("DROP TABLE \"" + tbl + '"');
     }
     stList = "";
@@ -236,15 +236,15 @@ VectorUnion PDPPDatabase::encryptedData() {
     KDF *kdf = makeKdf();
     auto enc = kdf->makeEncryptor();
     enc->set_key(passw);
-    if (qApp->property("verbose").toBool()) {
-        qDebug() << "STList before saveSt:" << stList.asStdStr().data();
-    }
+#ifndef NDEBUG
+    qDebug() << "STList before saveSt:" << stList.asStdStr().data();
+#endif
 
     saveSt();
 
-    if (qApp->property("verbose").toBool()) {
-        qDebug() << "STList after saveSt:" << stList.asStdStr().data();
-    }
+#ifndef NDEBUG
+    qDebug() << "STList after saveSt:" << stList.asStdStr().data();
+#endif
 
     VectorUnion pt = stList;
 
@@ -300,9 +300,9 @@ void PDPPDatabase::encrypt() {
     pd << desc << '\n';
 
     data = this->encryptedData();
-    if (qApp->property("verbose").toBool()) {
-        qDebug() << "Data (Encryption):" << data.encoded().asQStr();
-    }
+#ifndef NDEBUG
+    qDebug() << "Data (Encryption):" << data.encoded().asQStr();
+#endif
 
     pd << data;
     pd.finish();
@@ -338,9 +338,9 @@ int PDPPDatabase::verify(const VectorUnion &t_password) {
     decr->set_key(vPtr);
     decr->start(iv);
 
-    if (qApp->property("verbose").toBool()) {
-        qDebug() << "Data (Decryption):" << t_data.encoded().asQStr();
-    }
+#ifndef NDEBUG
+    qDebug() << "Data (Decryption):" << t_data.encoded().asQStr();
+#endif
 
     try {
         decr->finish(t_data);

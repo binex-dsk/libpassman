@@ -1,6 +1,5 @@
 #ifndef VECTORUNION_H
 #define VECTORUNION_H
-#include <botan/hex.h>
 #include <QVariant>
 
 #include "extra.hpp"

@@ -1,4 +1,5 @@
 #include <botan/compression.h>
+#include <botan/hex.h>
 #include <QElapsedTimer>
 #include <QFile>
 #include <QVariant>
@@ -229,11 +230,10 @@ VectorUnion KDF::transform(VectorUnion t_data, VectorUnion t_seed) {
 
         hash->derive_key(ptr.data(), ptr.size(), t_data.asConstChar(), t_data.size(), t_seed.data(), enc->default_nonce_length());
 
-        if (qApp->property("verbose").toBool()) {
-            qDebug() << t_data;
-            qDebug() << "After Hashing:" << Botan::hex_encode(ptr).data() << Qt::endl;
-        }
-
+#ifndef NDEBUG
+        qDebug() << t_data;
+        qDebug() << "After Hashing:" << Botan::hex_encode(ptr).data() << Qt::endl;
+#endif
     }
 
     secvec ptr(enc->maximum_keylength());
@@ -241,10 +241,10 @@ VectorUnion KDF::transform(VectorUnion t_data, VectorUnion t_seed) {
 
     deriv->derive_key(ptr.data(), ptr.size(), t_data.asConstChar(), t_data.size(), t_seed.data(), enc->default_nonce_length());
 
-    if (qApp->property("verbose").toBool()) {
-        qDebug() << toString() << t_seed << t_data;
-        qDebug() << "After Derivation:" << Botan::hex_encode(ptr).data() << Qt::endl;
-    }
+#ifndef NDEBUG
+    qDebug() << toString() << t_seed << t_data;
+    qDebug() << "After Derivation:" << Botan::hex_encode(ptr).data() << Qt::endl;
+#endif
 
     return ptr;
 }

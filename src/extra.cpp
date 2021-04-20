@@ -1,3 +1,5 @@
+#include <QObject>
+
 #include "extra.hpp"
 
 // Wrapper function to make translation easier.

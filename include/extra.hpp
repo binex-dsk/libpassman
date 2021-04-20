@@ -8,7 +8,6 @@
 #include <botan/secmem.h>
 
 #include <QSqlDatabase>
-#include <QCoreApplication>
 
 extern QSqlDatabase db;
 

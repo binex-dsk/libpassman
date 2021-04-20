@@ -1,7 +1,5 @@
 #ifndef FIELD_H
 #define FIELD_H
-#include <QVariant>
-
 #include "vector_union.hpp"
 
 // Class that wraps around an entry data field.

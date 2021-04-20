@@ -1,3 +1,5 @@
+#include <botan/hex.h>
+
 #include "vector_union.hpp"
 
 VectorUnion::VectorUnion(const QString &data) {
