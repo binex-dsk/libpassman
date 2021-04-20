@@ -2,6 +2,8 @@
 Library for interacting with passman++ databases.
 
 # Building
+You need the Qt 6 and Botan libraries before building. CMake will throw an error if you don't have these.
+
 Simply run:
 ```bash
 $ cmake -S . -B build

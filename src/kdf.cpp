@@ -230,7 +230,7 @@ VectorUnion KDF::transform(VectorUnion t_data, VectorUnion t_seed) {
 
         hash->derive_key(ptr.data(), ptr.size(), t_data.asConstChar(), t_data.size(), t_seed.data(), enc->default_nonce_length());
 
-#ifndef NDEBUG
+#ifdef DEBUG
         qDebug() << t_data;
         qDebug() << "After Hashing:" << Botan::hex_encode(ptr).data() << Qt::endl;
 #endif
@@ -241,7 +241,7 @@ VectorUnion KDF::transform(VectorUnion t_data, VectorUnion t_seed) {
 
     deriv->derive_key(ptr.data(), ptr.size(), t_data.asConstChar(), t_data.size(), t_seed.data(), enc->default_nonce_length());
 
-#ifndef NDEBUG
+#ifdef DEBUG
     qDebug() << toString() << t_seed << t_data;
     qDebug() << "After Derivation:" << Botan::hex_encode(ptr).data() << Qt::endl;
 #endif

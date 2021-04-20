@@ -84,7 +84,7 @@ void PDPPDatabase::get() {
         q.next();
         QList<Field *> fields;
         QSqlRecord rec = q.record();
-#ifndef NDEBUG
+#ifdef DEBUG
         qDebug() << "generating entry from table" << tbl;
         qDebug() << rec;
 #endif
@@ -113,7 +113,7 @@ void PDPPDatabase::get() {
 
 bool PDPPDatabase::saveSt() {
     for (const QString &tbl : db.tables()) {
-#ifndef NDEBUG
+#ifdef DEBUG
         qDebug() << "deleting table" << tbl;
 #endif
         db.exec("DROP TABLE \"" + tbl + '"');
@@ -236,13 +236,13 @@ VectorUnion PDPPDatabase::encryptedData() {
     KDF *kdf = makeKdf();
     auto enc = kdf->makeEncryptor();
     enc->set_key(passw);
-#ifndef NDEBUG
+#ifdef DEBUG
     qDebug() << "STList before saveSt:" << stList.asStdStr().data();
 #endif
 
     saveSt();
 
-#ifndef NDEBUG
+#ifdef DEBUG
     qDebug() << "STList after saveSt:" << stList.asStdStr().data();
 #endif
 
@@ -300,7 +300,7 @@ void PDPPDatabase::encrypt() {
     pd << desc << '\n';
 
     data = this->encryptedData();
-#ifndef NDEBUG
+#ifdef DEBUG
     qDebug() << "Data (Encryption):" << data.encoded().asQStr();
 #endif
 
@@ -338,7 +338,7 @@ int PDPPDatabase::verify(const VectorUnion &t_password) {
     decr->set_key(vPtr);
     decr->start(iv);
 
-#ifndef NDEBUG
+#ifdef DEBUG
     qDebug() << "Data (Decryption):" << t_data.encoded().asQStr();
 #endif
 

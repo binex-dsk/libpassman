@@ -64,4 +64,5 @@ install(TARGETS passman
 
 install(FILES ${CMAKE_BINARY_DIR}/passman.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
 
-target_compile_options(passman PUBLIC -O2 -march=native -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wunused -Wold-style-cast -Wconversion -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -pedantic -Wuseless-cast)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -march=native -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wunused -Wold-style-cast -Wconversion -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -pedantic -Wuseless-cast -DDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -march=native")
