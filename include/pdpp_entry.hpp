@@ -1,79 +1,81 @@
-#ifndef ENTRY_H
-#define ENTRY_H
+#ifndef PDPPENTRY_H
+#define PDPPENTRY_H
 
 #include "field.hpp"
-#include "pdpp_database.hpp"
 
-// Class that wraps a database entry.
-class Entry
-{
-    QList<Field *> m_fields;
-    PDPPDatabase *m_database;
-    QString m_name;
-public:
-    Entry() = default;
-    Entry(QList<Field *> t_fields, PDPPDatabase *t_database);
+namespace passman {
+    class PDPPDatabase;
+    // Class that wraps a database entry.
+    class PDPPEntry
+    {
+        QList<Field *> m_fields;
+        PDPPDatabase *m_database;
+        QString m_name;
+    public:
+        PDPPEntry(QList<Field *> t_fields, PDPPDatabase *t_database);
+        PDPPEntry() = default;
+        virtual ~PDPPEntry() = default;
 
-    inline void addField(Field *t_field) {
-        this->m_fields.emplaceBack(t_field);
-    }
-
-    inline bool removeField(Field *t_field) {
-        return this->m_fields.removeOne(t_field);
-    }
-
-    inline qsizetype indexOf(Field *t_field) {
-        return this->m_fields.indexOf(t_field);
-    }
-
-    inline Field *fieldNamed(QString t_name) {
-        for (Field *f : this->m_fields) {
-            if (f->lowerName() == t_name) {
-                return f;
-            }
+        inline void addField(Field *t_field) {
+            this->m_fields.emplaceBack(t_field);
         }
-        return new Field("", "", QMetaType::QString);
-    }
 
-    inline Field *fieldAt(const int t_index) {
-        return this->m_fields[t_index];
-    }
+        inline bool removeField(Field *t_field) {
+            return this->m_fields.removeOne(t_field);
+        }
 
-    inline const QList<Field *> &fields() {
-        return this->m_fields;
-    }
+        inline qsizetype indexOf(Field *t_field) {
+            return this->m_fields.indexOf(t_field);
+        }
 
-    inline QList<Field *> &setFields(QList<Field *> &t_fields) {
-        this->m_fields = t_fields;
-        return t_fields;
-    }
+        inline Field *fieldNamed(QString t_name) {
+            for (Field *f : this->m_fields) {
+                if (f->lowerName() == t_name) {
+                    return f;
+                }
+            }
+            return new Field("", "", QMetaType::QString);
+        }
 
-    inline qsizetype fieldLength() {
-        return this->m_fields.length();
-    }
+        inline Field *fieldAt(const int t_index) {
+            return this->m_fields[t_index];
+        }
 
-    inline PDPPDatabase *database() {
-        return this->m_database;
-    }
+        inline const QList<Field *> &fields() {
+            return this->m_fields;
+        }
 
-    inline PDPPDatabase *setDb(PDPPDatabase *t_database) {
-        this->m_database = t_database;
-        return t_database;
-    }
+        inline QList<Field *> &setFields(QList<Field *> &t_fields) {
+            this->m_fields = t_fields;
+            return t_fields;
+        }
 
-    inline const QString &name() {
-        return this->m_name;
-    }
+        inline qsizetype fieldLength() {
+            return this->m_fields.length();
+        }
 
-    inline QString &setName(QString &t_name) {
-        this->m_name = t_name;
-        return t_name;
-    }
+        virtual inline PDPPDatabase *database() {
+            return this->m_database;
+        }
 
-    // Open the entry editor dialog.
-    inline void edit() {
+        virtual inline PDPPDatabase *setDb(PDPPDatabase *t_database) {
+            this->m_database = t_database;
+            return t_database;
+        }
 
-    }
-};
+        inline const QString &name() {
+            return this->m_name;
+        }
 
-#endif // ENTRY_H
+        inline QString &setName(QString &t_name) {
+            this->m_name = t_name;
+            return t_name;
+        }
+
+        // Open the entry editor dialog.
+        inline void edit() {
+
+        }
+    };
+}
+#endif // PDPPENTRY_H

@@ -2,85 +2,87 @@
 
 #include "vector_union.hpp"
 
-VectorUnion::VectorUnion(const QString &data) {
-    *this = data.toStdString();
-}
-
-VectorUnion::VectorUnion(const std::string &data) {
-    *this = secvec(data.begin(), data.end());
-}
-
-VectorUnion::VectorUnion(const char *data, const int length) {
-    if (length == 0) {
-        *this = QString(data);
-    } else {
-        *this = std::string(data, length);
+namespace passman {
+    VectorUnion::VectorUnion(const QString &data) {
+        *this = data.toStdString();
     }
-}
 
-VectorUnion::VectorUnion(const secvec &data) {
-    this->assign(data.begin(), data.end());
-}
+    VectorUnion::VectorUnion(const std::string &data) {
+        *this = secvec(data.begin(), data.end());
+    }
 
-VectorUnion::VectorUnion(const std::vector<uint8_t> &data) {
-    this->operator=(secvec(data.begin(), data.end()));
-}
+    VectorUnion::VectorUnion(const char *data, const int length) {
+        if (length == 0) {
+            *this = QString(data);
+        } else {
+            *this = std::string(data, length);
+        }
+    }
 
-VectorUnion::VectorUnion(const QVariant &data) {
-    this->operator=(data.toString());
-}
+    VectorUnion::VectorUnion(const secvec &data) {
+        this->assign(data.begin(), data.end());
+    }
 
-VectorUnion::VectorUnion(const bool data) {
-    this->operator=(QVariant(data));
-}
+    VectorUnion::VectorUnion(const std::vector<uint8_t> &data) {
+        this->operator=(secvec(data.begin(), data.end()));
+    }
 
-VectorUnion::VectorUnion(const double data) {
-    this->operator=(QVariant(data));
-}
+    VectorUnion::VectorUnion(const QVariant &data) {
+        this->operator=(data.toString());
+    }
 
-VectorUnion::VectorUnion(const QByteArray &data) {
-    *this = VectorUnion(data.constData(), static_cast<int>(data.size()));
-}
+    VectorUnion::VectorUnion(const bool data) {
+        this->operator=(QVariant(data));
+    }
 
-const char *VectorUnion::asConstChar() const {
-    return reinterpret_cast<const char *>(this->data());
-}
+    VectorUnion::VectorUnion(const double data) {
+        this->operator=(QVariant(data));
+    }
 
-QString VectorUnion::asQStr() const {
-    return QString::fromStdString(asStdStr());
-}
+    VectorUnion::VectorUnion(const QByteArray &data) {
+        *this = VectorUnion(data.constData(), static_cast<int>(data.size()));
+    }
 
-std::string VectorUnion::asStdStr() const {
-    return std::string(this->begin(), this->end());
-}
+    const char *VectorUnion::asConstChar() const {
+        return reinterpret_cast<const char *>(this->data());
+    }
 
-QVariant VectorUnion::asQVariant() const {
-    return QVariant(this->data());
-}
+    QString VectorUnion::asQStr() const {
+        return QString::fromStdString(asStdStr());
+    }
 
-QByteArray VectorUnion::asQByteArray() const {
-    return QByteArray(this->asConstChar());
-}
+    std::string VectorUnion::asStdStr() const {
+        return std::string(this->begin(), this->end());
+    }
 
-VectorUnion VectorUnion::encoded() const {
-    return Botan::hex_encode(*this);
-}
+    QVariant VectorUnion::asQVariant() const {
+        return QVariant(this->data());
+    }
 
-VectorUnion VectorUnion::decoded() const {
-    return Botan::hex_decode(this->asStdStr());
-}
+    QByteArray VectorUnion::asQByteArray() const {
+        return QByteArray(this->asConstChar());
+    }
 
-VectorUnion::operator bool() const {
-    return this->asQVariant().toBool();
-}
+    VectorUnion VectorUnion::encoded() const {
+        return Botan::hex_encode(*this);
+    }
 
-VectorUnion::operator double() const {
-    return this->asQVariant().toDouble();
-}
+    VectorUnion VectorUnion::decoded() const {
+        return Botan::hex_decode(this->asStdStr());
+    }
 
-VectorUnion &VectorUnion::operator+=(QString s) {
-    QString t_str = this->asQStr();
-    t_str.append(s);
-    *this = t_str;
-    return *this;
+    VectorUnion::operator bool() const {
+        return this->asQVariant().toBool();
+    }
+
+    VectorUnion::operator double() const {
+        return this->asQVariant().toDouble();
+    }
+
+    VectorUnion &VectorUnion::operator+=(QString s) {
+        QString t_str = this->asQStr();
+        t_str.append(s);
+        *this = t_str;
+        return *this;
+    }
 }

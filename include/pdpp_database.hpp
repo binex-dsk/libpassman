@@ -1,5 +1,5 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+#ifndef PDPPDATABASE_H
+#define PDPPDATABASE_H
 
 #include <botan/compression.h>
 #include <botan/pwdhash.h>
@@ -11,100 +11,148 @@
 #include "vector_union.hpp"
 #include "kdf.hpp"
 
-class Entry;
+namespace passman {
+    class PDPPEntry;
 
-// TODO: getters and setters for variables
+    // TODO: getters and setters for variables
 
-// Drives all operations related to database access.
-class PDPPDatabase
-{
-    QList<Entry *> m_entries;
-public:
-    PDPPDatabase(const QVariantMap &p);
-    PDPPDatabase() = default;
+    /** Drives all operations related to database access. */
+    class PDPPDatabase
+    {
+        QList<PDPPEntry *> m_entries;
+    public:
+        /**
+         * Construct a database from a parameter map. See Database::setParams.
+         * @param p Parameter map.
+         */
+        PDPPDatabase(const QVariantMap &p);
+        PDPPDatabase() = default;
+        virtual ~PDPPDatabase() = default;
 
-    inline bool save() {
-        this->encrypt();
+        /**
+         * Encrypt the database and set it to be modified.
+         */
+        inline void save() {
+            this->encrypt();
 
-        this->modified = false;
-        return true;
-    }
+            this->modified = false;
+        }
 
-    inline void addEntry(Entry *entry) {
-        this->m_entries.emplaceBack(entry);
-        this->modified = true;
-    }
+        /**
+         * Add an entry to the database.
+         * @param entry Entry to add.
+         */
+        inline void addEntry(PDPPEntry *entry) {
+            this->m_entries.emplaceBack(entry);
+            this->modified = true;
+        }
 
-    inline bool removeEntry(Entry *entry) {
-        return this->m_entries.removeOne(entry);
-        this->modified = true;
-    }
+        /**
+         * Remove an entry from the database.
+         * @param entry Entry to remove.
+         * @return Whether or not removing the entry was successful.
+         */
+        inline bool removeEntry(PDPPEntry *entry) {
+            bool ok = this->m_entries.removeOne(entry);
+            this->modified = ok;
+            return ok;
+        }
 
-    inline qsizetype entryLength() {
-        return this->m_entries.length();
-    }
+        /**
+         * Return the amount of entries in the database.
+         */
+        inline qsizetype entryLength() {
+            return this->m_entries.length();
+        }
 
-    inline QList<Entry *> &entries() {
-        return this->m_entries;
-    }
+        inline QList<PDPPEntry *> &entries() {
+            return this->m_entries;
+        }
 
-    inline void setEntries(QList<Entry *> t_entries) {
-        this->m_entries = t_entries;
-        this->modified = true;
-    }
+        inline void setEntries(QList<PDPPEntry *> t_entries) {
+            this->m_entries = t_entries;
+            this->modified = true;
+        }
 
-    bool setParams(const QVariantMap &p);
+        /**
+         * Sets up the databases's params through a parameter map.
+         * @param p Parameter map.
+         * Provide the parameter map as {"key", "value"}, i.e.
+         * {"name", "funny database"}, etc.
+         *
+         * @return Whether or not setting the parameters was successful.
+         */
+        bool setParams(const QVariantMap &p);
 
-    Entry *entryNamed(const QString &t_name);
-    Entry *entryWithPassword(const QString &t_pass);
+        /**
+         * Return an entry with the specified name.
+         * @param t_name Name to look for.
+         */
+        PDPPEntry *entryNamed(const QString &t_name);
 
-    void get();
-    bool saveSt();
+        /**
+         * Returns an entry with the specified password.
+         * @param t_pass Password to look for.
+         */
+        PDPPEntry *entryWithPassword(const QString &t_pass);
 
-    bool isOld();
-    bool convert(const VectorUnion &t_password);
+        /**
+         * Turns SQL statements from the global SQL database into entries.
+         */
+        void get();
 
-    VectorUnion encryptedData();
-    void encrypt();
+        /**
+         * Turns entries into SQL statements.
+         *
+         * @return Whether or not it was successful.
+         */
+        bool saveSt();
 
-    std::pair<VectorUnion, int> decryptData(VectorUnion t_data, const VectorUnion &t_password, const VectorUnion &t_keyFile = {});
-    int verify(const VectorUnion &t_password);
-    bool decrypt(PasswordOptionsFlag t_options = PasswordOptions(), const VectorUnion &t_password = "", const VectorUnion &t_keyFile = {});
+        bool isOld();
+        bool convert(const VectorUnion &t_password);
 
-    bool parse();
+        VectorUnion encryptedData();
+        void encrypt();
 
-    bool open(const QString &t_password, const QString &t_keyFile);
-    int saveAs(const QString &t_fileName);
+        std::pair<VectorUnion, int> decryptData(VectorUnion t_data, const VectorUnion &t_password, const VectorUnion &t_keyFile = {});
+        int verify(const VectorUnion &t_password);
+        bool decrypt(PasswordOptionsFlag t_options = PasswordOptions(), const VectorUnion &t_password = "", const VectorUnion &t_keyFile = {});
 
-    KDF *makeKdf(uint8_t t_hmac = 63, uint8_t t_hash = 63, uint8_t t_encryption = 63, VectorUnion t_seed = {}, VectorUnion t_keyFile = {}, uint8_t t_hashIters = 0, uint16_t t_memoryUsage = 0);
+        int parse();
 
-    bool keyFile = false;
-    bool modified = false;
+        int open(const QString &t_password, const QString &t_keyFile);
+        int saveAs(const QString &t_fileName);
 
-    uint8_t hmac = 0;
-    uint8_t hash = 0;
-    uint8_t hashIters = 8;
-    uint8_t encryption = 0;
-    uint8_t version = Constants::maxVersion;
+        KDF *makeKdf(uint8_t t_hmac = 63, uint8_t t_hash = 63, uint8_t t_encryption = 63, VectorUnion t_seed = {}, VectorUnion t_keyFile = {}, uint8_t t_hashIters = 0, uint16_t t_memoryUsage = 0);
 
-    uint16_t memoryUsage = 64;
-    uint8_t clearSecs = 15;
+        bool keyFile = false;
+        bool modified = false;
 
-    bool compress = true;
+        uint8_t hmac = 0;
+        uint8_t hash = 0;
+        uint8_t hashIters = 8;
+        uint8_t encryption = 0;
+        uint8_t version = Constants::maxVersion;
 
-    VectorUnion iv{};
-    size_t ivLen = 12;
+        uint16_t memoryUsage = 64;
+        uint8_t clearSecs = 15;
 
-    VectorUnion data{};
+        bool compress = true;
 
-    VectorUnion name = "None";
-    VectorUnion desc = "None";
+        VectorUnion iv{};
+        size_t ivLen = 12;
 
-    VectorUnion path = "";
-    VectorUnion keyFilePath = "";
+        VectorUnion data{};
 
-    VectorUnion stList = "";
-    VectorUnion passw{};
-};
+        VectorUnion name = "None";
+        VectorUnion desc = "None";
 
-#endif // DATABASE_H
+        VectorUnion path = "";
+        VectorUnion keyFilePath = "";
+
+        VectorUnion stList = "";
+        VectorUnion passw{};
+    };
+}
+
+#endif // PDPPDATABASE_H

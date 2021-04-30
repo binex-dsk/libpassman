@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 
-project(passman LANGUAGES CXX VERSION 2.1.0 DESCRIPTION "Library for interaction with passman++ database files.")
+project(passman LANGUAGES CXX DESCRIPTION "Library for interaction with passman++ database files.")
 
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOMOC ON)
@@ -23,12 +23,13 @@ add_library(passman SHARED
 )
 
 set_target_properties(passman PROPERTIES
-    VERSION 2.1.0
+    VERSION 2.1.1
     SOVERSION 1
 )
 
 set_property(TARGET passman
     PROPERTY PUBLIC_HEADER
+    include/constants.hpp
     include/extra.hpp
     include/field.hpp
     include/data_stream.hpp
@@ -42,10 +43,9 @@ configure_file(passman.pc.in passman.pc @ONLY)
 target_include_directories(passman PRIVATE include)
 target_include_directories(passman PRIVATE src)
 
-find_library(BOTAN botan-2)
-if (NOT BOTAN)
-    message(FATAL_ERROR "Botan library not found. Please install through your distribution's password manager.")
-endif()
+include(FindPkgConfig)
+
+pkg_check_modules(BOTAN2 REQUIRED botan-2)
 
 find_package(Qt6 COMPONENTS Core REQUIRED)
 find_package(Qt6 COMPONENTS Sql REQUIRED)
@@ -62,7 +62,7 @@ install(TARGETS passman
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 
-install(FILES ${CMAKE_BINARY_DIR}/passman.pc DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+install(FILES ${CMAKE_BINARY_DIR}/passman.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -march=native -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wunused -Wold-style-cast -Wconversion -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -pedantic -Wuseless-cast -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -march=native")
