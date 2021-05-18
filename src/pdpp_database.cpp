@@ -216,7 +216,7 @@ namespace passman {
             QSqlQuery finalQ(db);
 
             if (!finalQ.exec(s)) {
-                qDebug() << "libpassman warning: SQL execution error during database conversion: " + finalQ.lastError().text() + "\nQuery: " + s;
+                std::cerr << "libpassman warning: SQL execution error during database conversion: " + finalQ.lastError().text().toStdString() + "\nQuery: " + s.toStdString() << std::endl;
             }
 
             finalQ.finish();
@@ -374,7 +374,7 @@ namespace passman {
 
                         QSqlQuery q(db);
                         if (!q.exec(line)) {
-                           qDebug() << "Warning: Error during database initialization: " + q.lastError().text();
+                           std::cerr << "Warning: Error during database initialization: " + q.lastError().text().toStdString() << std::endl;
                         }
                     }
                 }
@@ -384,9 +384,9 @@ namespace passman {
         }
 
         if (ok == 3) {
-            qDebug() << "Key File is invalid.";
+            std::cerr << "Key File is invalid.\n";
         } else {
-            qDebug() << "Password is incorrect.\nIf this problem continues, the database may be corrupt.";
+            std::cerr << "Password is incorrect.\nIf this problem continues, the database may be corrupt.\n";
         }
         return false;
     }
@@ -403,17 +403,17 @@ namespace passman {
         q.readRawData(readData, 4);
 
         if (std::string(readData, 4) != "PD++") {
-            return 3;
+            throw std::runtime_error("Invalid magic number. Should be PD++.");
         }
 
         q >> version;
         if (version > Constants::maxVersion) {
-            return 4;
+            throw std::runtime_error("Invalid version number.");
         }
 
         q >> hmac;
         if (hmac >= Constants::hmacMatch.size()){
-            return 5;
+            throw std::runtime_error("Invalid HMAC option.");
         }
 
         if (version < 6) {
@@ -422,7 +422,7 @@ namespace passman {
 
         q >> hash;
         if (hash >= Constants::hashMatch.size()){
-            return 6;
+            throw std::runtime_error("Invalid hash option.");
         }
 
         if (hash != 3) {
@@ -433,7 +433,7 @@ namespace passman {
 
         q >> encryption;
         if (encryption >= Constants::encryptionMatch.size()){
-            return 7;
+            throw std::runtime_error("Invalid encryption option.");
         }
 
         if (version >= 7) {
@@ -475,7 +475,7 @@ namespace passman {
                         return false;
                     }
                 } catch (std::exception& e) {
-                    qDebug() << e.what();
+                    std::cerr << e.what() << std::endl;
                     return false;
                 }
             }
@@ -487,13 +487,13 @@ namespace passman {
 
                 QSqlQuery q(db);
                 if (!q.exec(line)) {
-                   qDebug() << "Warning: Error during database initialization: " + q.lastError().text();
+                   std::cerr << "Warning: Error during database initialization: " + q.lastError().text().toStdString() << std::endl;
                 }
             }
             get();
             return true;
         }
-        qDebug() << "Invalid path provided.";
+        std::cerr << "Invalid path provided.\n";
         return false;
     }
 
@@ -511,7 +511,7 @@ namespace passman {
             path = t_fileName;
             save();
         } catch (std::exception& e) {
-            qDebug() << e.what();
+            std::cerr << e.what() << std::endl;
         }
         return true;
     }

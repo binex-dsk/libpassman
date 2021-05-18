@@ -36,7 +36,8 @@ set_property(TARGET passman
     include/kdf.hpp
     include/pdpp_database.hpp
     include/pdpp_entry.hpp
-    include/vector_union.hpp)
+    include/vector_union.hpp
+)
 
 configure_file(passman.pc.in passman.pc @ONLY)
 
