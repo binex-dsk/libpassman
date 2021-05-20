@@ -163,7 +163,7 @@ namespace passman {
 
         const VectorUnion t_iv = f.readLine().trimmed();
         try {
-            t_iv.decoded();
+            t_iv.hex_decode();
         } catch (...) {
             return false;
         }
@@ -178,7 +178,7 @@ namespace passman {
         const VectorUnion t_iv = f.readLine().trimmed();
         VectorUnion ivd;
         try {
-            ivd = t_iv.decoded();
+            ivd = t_iv.hex_decode();
         } catch (...) {
             return false;
         }
@@ -298,7 +298,7 @@ namespace passman {
 
         data = this->encryptedData();
     #ifdef DEBUG
-        qDebug() << "Data (Encryption):" << data.encoded().asQStr();
+        qDebug() << "Data (Encryption):" << data.hex_encode().asQStr();
     #endif
 
         pd << data;
@@ -336,7 +336,7 @@ namespace passman {
         decr->start(iv);
 
     #ifdef DEBUG
-        qDebug() << "Data (Decryption):" << t_data.encoded().asQStr();
+        qDebug() << "Data (Decryption):" << t_data.hex_encode().asQStr();
     #endif
 
         try {

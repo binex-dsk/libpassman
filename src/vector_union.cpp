@@ -1,4 +1,5 @@
 #include <botan/hex.h>
+#include <botan/base32.h>
 
 #include "vector_union.hpp"
 
@@ -63,12 +64,20 @@ namespace passman {
         return QByteArray(this->asConstChar());
     }
 
-    VectorUnion VectorUnion::encoded() const {
+    VectorUnion VectorUnion::hex_encode() const {
         return Botan::hex_encode(*this);
     }
 
-    VectorUnion VectorUnion::decoded() const {
+    VectorUnion VectorUnion::hex_decode() const {
         return Botan::hex_decode(this->asStdStr());
+    }
+
+    VectorUnion VectorUnion::base32_encode() const {
+        return Botan::base32_encode(*this);
+    }
+
+    VectorUnion VectorUnion::base32_decode() const {
+        return Botan::base32_decode(this->asStdStr());
     }
 
     VectorUnion::operator bool() const {

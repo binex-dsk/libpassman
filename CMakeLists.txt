@@ -20,6 +20,8 @@ add_library(passman SHARED
         src/field.cpp
         src/vector_union.cpp
         src/data_stream.cpp
+
+        src/2fa.cpp
 )
 
 set_target_properties(passman PROPERTIES
@@ -37,6 +39,7 @@ set_property(TARGET passman
     include/pdpp_database.hpp
     include/pdpp_entry.hpp
     include/vector_union.hpp
+    include/2fa.hpp
 )
 
 configure_file(passman.pc.in passman.pc @ONLY)

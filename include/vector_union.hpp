@@ -31,8 +31,11 @@ namespace passman {
         QVariant asQVariant() const;
         QByteArray asQByteArray() const;
 
-        VectorUnion encoded() const;
-        VectorUnion decoded() const;
+        VectorUnion hex_encode() const;
+        VectorUnion hex_decode() const;
+
+        VectorUnion base32_encode() const;
+        VectorUnion base32_decode() const;
 
         explicit operator bool() const;
         explicit operator double() const;
