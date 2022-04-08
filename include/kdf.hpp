@@ -37,6 +37,12 @@ namespace passman {
          * Provide the parameter map as {"key", "value"}, i.e.
          * {"i1", "10"}, etc.
          *
+         * Available params: i1, i2, i3, rounds, hmac, hash, encryption,
+         * seed, keyfile
+         *
+         * i1, i2, and i3's function depend on the selected hash function.
+         * Check their docs for details.
+         *
          * @return Whether or not setting the parameters was successful.
          */
         bool setParams(const QVariantMap &p);

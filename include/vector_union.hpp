@@ -5,9 +5,11 @@
 #include "extra.hpp"
 
 namespace passman {
-    /* Helper class which stores a Botan::secure_vector<uint8_t>.
+    /**
+     * Helper class which stores a Botan::secure_vector<uint8_t>.
      * Primary use is secure storage of many different types, allowing for assignment and conversion to/from these types. Supported types include:
-     * QString, std::string, const char *, secure vector, QVariant, bool, and double */
+     * QString, std::string, const char *, secure vector, QVariant, bool, and double
+     */
     class VectorUnion : public secvec
     {
     public:

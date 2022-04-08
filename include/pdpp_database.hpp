@@ -22,7 +22,7 @@ namespace passman {
         QList<PDPPEntry *> m_entries;
     public:
         /**
-         * Construct a database from a parameter map. See Database::setParams.
+         * Construct a database from a parameter map. See PDPPDatabase::setParams.
          * @param p Parameter map.
          */
         PDPPDatabase(const QVariantMap &p);
@@ -109,21 +109,81 @@ namespace passman {
         bool saveSt();
 
         bool isOld();
+
+        /**
+         * Converts a pre-2.0.0 database into a 2.0.0-style database
+         * @param t_password Password to attempt for decryption.
+         */
         bool convert(const VectorUnion &t_password);
 
+        /**
+         * Gets the data and encrypts it.
+         *
+         * @return The encrypted data.
+         */
         VectorUnion encryptedData();
+
+        /**
+         * Encrypt and write data to the database file.
+         */
         void encrypt();
 
-        std::pair<VectorUnion, int> decryptData(VectorUnion t_data, const VectorUnion &t_password, const VectorUnion &t_keyFile = {});
+        /**
+         * Decrypt and verify that the data is still valid.
+         *
+         * @return 0 or 3 if invalid, 1 if valid.
+         */
         int verify(const VectorUnion &t_password);
+
+        /**
+         * Unused
+         */
+        std::pair<VectorUnion, int> decryptData(VectorUnion t_data, const VectorUnion &t_password, const VectorUnion &t_keyFile = {});
+
+        /**
+         * Decrypts data from disk.
+         * @param t_options PasswordOptions flags; Open (load data into Database) and/or Convert (convert from pre-2.0.0 database).
+         * Generally not needed to be set directly; open() and convert() will do this for you.
+         * @param t_password The password to attempt.
+         * @param t_keyFile The keyfile to attempt.
+         *
+         * @return Whether or not decryption was successful.
+         */
         bool decrypt(PasswordOptionsFlag t_options = PasswordOptions(), const VectorUnion &t_password = "", const VectorUnion &t_keyFile = {});
 
+        /**
+         * Parses data from disk to prepare for decryption.
+         *
+         * Note: This contains backward-compatibility for all previous 2.0.0-style databases.
+         *
+         * @return 2 if the database is old, throws if it fails, returns true if it succeeds.
+         */
         int parse();
 
+        /**
+         * Decrypt the database and loads data.
+         * @param t_password Password to attempt.
+         * @param t_keyFile Key file to attempt.
+         *
+         * @return true or false if succeeded or failed
+         */
         int open(const QString &t_password, const QString &t_keyFile);
+
+        /**
+         * Save the database to the specified location.
+         * @param t_fileName Location to save to.
+         *
+         * @return 3 if no location is passed, 17 if the file can't be opened, true otherwise
+         * TODO: throw
+         */
         int saveAs(const QString &t_fileName);
 
-        KDF *makeKdf(uint8_t t_hmac = 63, uint8_t t_hash = 63, uint8_t t_encryption = 63, VectorUnion t_seed = {}, VectorUnion t_keyFile = {}, uint8_t t_hashIters = 0, uint16_t t_memoryUsage = 0);
+        /**
+         * Makes a @link{KDF} object with all the specified parameters.
+         *
+         * @return The generated KDF object.
+         */
+         KDF *makeKdf(uint8_t t_hmac = 63, uint8_t t_hash = 63, uint8_t t_encryption = 63, VectorUnion t_seed = {}, VectorUnion t_keyFile = {}, uint8_t t_hashIters = 0, uint16_t t_memoryUsage = 0);
 
         bool keyFile = false;
         bool modified = false;

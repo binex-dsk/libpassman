@@ -21,16 +21,24 @@ namespace passman {
     };
     Q_DECLARE_FLAGS(PasswordOptionsFlag, PasswordOptions)
 
-    // Acts like Qt's tr() function.
+    /*
+     * Qt's tr() function, for internal use within the passman namespace.
+     */
     const QString tr(const QString &s);
 
-    // Acts like Qt's tr() function.
+    /*
+     * Qt's tr() function, for an std::string.
+     */
     const QString tr(const std::string &s);
 
-    // Acts like Qt's tr() function.
+    /*
+     * Qt's tr() function, for a char *.
+     */
     const QString tr(const char *s);
 
-    // Generate a range list of an integer type.
+    /*
+     * Generate a range list of an integer type.
+     */
     template <typename NumberType = int>
     QList<NumberType> range(int start, int amount) {
         QList<NumberType> rangeList;

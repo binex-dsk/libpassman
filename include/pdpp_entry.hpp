@@ -3,15 +3,37 @@
 
 #include "field.hpp"
 
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
+// TODO: DOCS
 namespace passman {
     class PDPPDatabase;
-    // Class that wraps a database entry.
+    /*
+     * Class that wraps a database entry.
+     */
     class PDPPEntry
     {
         QList<Field *> m_fields;
         PDPPDatabase *m_database;
         QString m_name;
     public:
+        /**
+         * Create an entry with the specified fields, owned by the specified database.
+         */
         PDPPEntry(QList<Field *> t_fields, PDPPDatabase *t_database);
         PDPPEntry() = default;
         virtual ~PDPPEntry() = default;
@@ -72,7 +94,9 @@ namespace passman {
             return t_name;
         }
 
-        // Open the entry editor dialog.
+        /*
+         * Override this function in your implementation to open an entry editing dialog, take parameters, etc.
+         */
         inline void edit() {
 
         }
