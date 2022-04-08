@@ -7,8 +7,8 @@
 #include "2fa.hpp"
 
 namespace passman {
-    // https://github.com/tadfisher/pass-otp/blob/develop/otp.bash
-    TFA::TFA(VectorUnion &t_uri) {
+    // adapted from https://github.com/tadfisher/pass-otp/blob/develop/otp.bash
+    OTP::OTP(VectorUnion &t_uri) {
         const std::regex uri_pattern("^otpauth://(totp|hotp)(/(([^:?]+)?(:([^:?]*))?))?\?(.+)$", std::regex::extended);
         std::smatch uri_match;
 
@@ -71,7 +71,7 @@ namespace passman {
         }
     }
 
-    TFA::TFA(const VectorUnion &t_secret, const VectorUnion &t_account, const VectorUnion &t_type, const VectorUnion &t_algorithm, const VectorUnion &t_issuer, const int t_digits, const int t_period, const int t_counter)
+    OTP::OTP(const VectorUnion &t_secret, const VectorUnion &t_account, const VectorUnion &t_type, const VectorUnion &t_algorithm, const VectorUnion &t_issuer, const int t_digits, const int t_period, const int t_counter)
     {
         secret = t_secret;
         account = t_account;
@@ -87,11 +87,11 @@ namespace passman {
         uri = make_uri();
     }
 
-    VectorUnion TFA::url_decode(const std::string &url) {
+    VectorUnion OTP::url_decode(const std::string &url) {
         return QUrl(QString::fromStdString(url)).toDisplayString();
     }
 
-    void TFA::validate() {
+    void OTP::validate() {
         if (secret.empty()) {
             throw std::runtime_error("Invalid key URI or parameter input: missing secret");
         }
@@ -113,7 +113,7 @@ namespace passman {
         }
     }
 
-    const VectorUnion TFA::make_uri() {
+    const VectorUnion OTP::make_uri() {
         QString separator = (!account.empty() && !issuer.empty() ? ":" : "");
         VectorUnion p_uri = "otpauth://" + type.asQStr() + "/" + issuer.asQStr() + separator + account.asQStr() + "?secret=" + secret.asQStr();
 
@@ -136,7 +136,7 @@ namespace passman {
         return p_uri;
     }
 
-    QString TFA::code() {
+    QString OTP::code() {
         Botan::HOTP hotp = Botan::HOTP(secret.base32_decode(), algorithm.asStdStr(), digits);
         auto unix_timestamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         int p_counter = (type.asStdStr() == "hotp" ? counter : unix_timestamp / period);

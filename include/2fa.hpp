@@ -4,9 +4,8 @@
 namespace passman {
     /**
      * Class for dealing with 2FA (OTPs)
-     * Named "TFA" because variable/class/function names can't start with numbers
      */
-    class TFA {
+    class OTP {
     private:
         VectorUnion url_decode(const std::string &url);
 
@@ -22,13 +21,13 @@ namespace passman {
         int counter = 0;
     public:
         /**
-         * Construct a TFA from an OTP URI.
+         * Construct an OTP from an OTP URI.
          * @param t_uri OTP uri.
          */
-        TFA(VectorUnion &t_uri);
+        OTP(VectorUnion &t_uri);
 
         /**
-         * Construct a TFA from OTP parameters.
+         * Construct an OTP from OTP parameters.
          * @param t_secret Required client secret key, base32 encoded.
          * @param t_account Required account name.
          * @param t_type The OTP type. Must be "totp" or "hotp", defaults to "totp".
@@ -38,7 +37,7 @@ namespace passman {
          * @param t_period For TOTP, the period in which the key is refreshed in seconds. Defaults to 30, the most common value.
          * @param t_counter For HOTP, the counter to start at. Defaults to 0.
          */
-        TFA(const VectorUnion &t_secret, const VectorUnion &t_account, const VectorUnion &t_type = {"totp"}, const VectorUnion &t_algorithm = {"SHA-1"}, const VectorUnion &t_issuer = {}, const int t_digits = 6, const int t_period = 30, const int t_counter = 0);
+        OTP(const VectorUnion &t_secret, const VectorUnion &t_account, const VectorUnion &t_type = {"totp"}, const VectorUnion &t_algorithm = {"SHA-1"}, const VectorUnion &t_issuer = {}, const int t_digits = 6, const int t_period = 30, const int t_counter = 0);
 
         /**
          * Validates the OTP parameters and throws if invalid.
