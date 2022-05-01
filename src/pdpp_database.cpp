@@ -490,7 +490,6 @@ namespace passman {
                    std::cerr << "Warning: Error during database initialization: " + q.lastError().text().toStdString() << std::endl;
                 }
             }
-            get();
             return true;
         }
         std::cerr << "Invalid path provided.\n";
