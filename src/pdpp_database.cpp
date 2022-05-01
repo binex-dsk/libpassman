@@ -480,7 +480,7 @@ namespace passman {
                 }
             }
 
-            for (const QString &line : stList.asQStr().split('\n')) {
+            /*for (const QString &line : stList.asQStr().split('\n')) {
                 if (line.isEmpty()) {
                     continue;
                 }
@@ -489,7 +489,7 @@ namespace passman {
                 if (!q.exec(line)) {
                    std::cerr << "Warning: Error during database initialization: " + q.lastError().text().toStdString() << std::endl;
                 }
-            }
+            }*/
             return true;
         }
         std::cerr << "Invalid path provided.\n";
