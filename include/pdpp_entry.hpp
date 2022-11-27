@@ -50,9 +50,14 @@ namespace passman {
             return this->m_fields.indexOf(t_field);
         }
 
+        /**
+         * Get a named field.
+         * @param t_name The field to get.
+         * @return The field with the specified name.
+         */
         inline Field *fieldNamed(QString t_name) {
             for (Field *f : this->m_fields) {
-                if (f->lowerName() == t_name) {
+                if (f->lowerName() == t_name.toLower()) {
                     return f;
                 }
             }

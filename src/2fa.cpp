@@ -139,7 +139,7 @@ namespace passman {
     QString OTP::code() {
         Botan::HOTP hotp = Botan::HOTP(secret.base32_decode(), algorithm.asStdStr(), digits);
         auto unix_timestamp = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        int p_counter = (type.asStdStr() == "hotp" ? counter : unix_timestamp / period);
+        long p_counter = (type.asStdStr() == "hotp" ? counter : unix_timestamp / period);
 
         uint32_t code = hotp.generate_hotp(p_counter);
 

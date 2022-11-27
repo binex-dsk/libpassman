@@ -13,7 +13,7 @@ namespace passman {
         , m_database(t_database)
     {
         if (t_fields.empty()) {
-            for (const QString &s : {"Name", "Email", "URL", "Notes", "Password"}) {
+            for (const QString &s : {"Name", "Email", "URL", "Notes", "Password", "OTP"}) {
                 QMetaType::Type ftype = (s == "Notes" ? QMetaType::QByteArray : QMetaType::QString);
                 this->addField(new Field(s, "", ftype));
             }
